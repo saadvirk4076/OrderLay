@@ -41,12 +41,13 @@ router.post('/', protectRestaurant, upload.array('images', 5), async (req, res) 
       const filename = `img_${Date.now()}_${Math.round(Math.random() * 1E9)}.webp`;
       const outputPath = path.join(uploadDir, filename);
 
-      await sharp(file.buffer)
+      const webpBuffer = await sharp(file.buffer)
         .resize({ width: 800, height: 800, fit: 'cover', withoutEnlargement: true }) // Force square crop
         .webp({ quality: 80 }) 
-        .toFile(outputPath);
+        .toBuffer();
       
-      urls.push(`http://localhost:5001/uploads/${filename}`);
+      const base64Str = `data:image/webp;base64,${webpBuffer.toString('base64')}`;
+      urls.push(base64Str);
     }
 
     res.status(201).json({ urls });
