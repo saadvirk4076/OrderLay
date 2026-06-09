@@ -27,9 +27,9 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${adminToken}` } };
-      const statsRes = await axios.get('http://localhost:5001/api/admin/stats', config);
+      const statsRes = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/admin/stats`, config);
       setStats(statsRes.data);
-      const restRes = await axios.get('http://localhost:5001/api/admin/restaurants', config);
+      const restRes = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/admin/restaurants`, config);
       setRestaurants(restRes.data);
     } catch (err) {
       console.error(err);
@@ -43,7 +43,7 @@ const AdminDashboard = () => {
   const toggleStatus = async (id) => {
     try {
       const config = { headers: { Authorization: `Bearer ${adminToken}` } };
-      await axios.put(`http://localhost:5001/api/admin/restaurants/${id}/status`, {}, config);
+      await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/admin/restaurants/${id}/status`, {}, config);
       fetchData();
     } catch (err) {
       console.error(err);
@@ -55,7 +55,7 @@ const AdminDashboard = () => {
     if (!window.confirm('Are you sure you want to permanently delete this restaurant and ALL its data?')) return;
     try {
       const config = { headers: { Authorization: `Bearer ${adminToken}` } };
-      await axios.delete(`http://localhost:5001/api/admin/restaurants/${id}`, config);
+      await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/admin/restaurants/${id}`, config);
       fetchData();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to delete');
@@ -79,11 +79,11 @@ const AdminDashboard = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${adminToken}` } };
       if (editingRestaurant) {
-        await axios.put(`http://localhost:5001/api/admin/restaurants/${editingRestaurant._id}`, restaurantForm, config);
+        await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/admin/restaurants/${editingRestaurant._id}`, restaurantForm, config);
         setShowModal(false);
         setEditingRestaurant(null);
       } else {
-        const res = await axios.post('http://localhost:5001/api/admin/restaurants', restaurantForm, config);
+        const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/admin/restaurants`, restaurantForm, config);
         setCreatedInfo(res.data);
       }
       setRestaurantForm({ name: '', email: '', phone: '', address: '', newPassword: '' });

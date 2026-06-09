@@ -17,7 +17,7 @@ const Home = () => {
 
   const fetchRestaurants = async () => {
     try {
-      const res = await axios.get('http://localhost:5001/api/public/restaurants');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/public/restaurants`);
       setRestaurants(res.data);
       setLoading(false);
     } catch (err) {

@@ -13,7 +13,7 @@ const CustomersCRM = () => {
   const fetchCustomers = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      const res = await axios.get('http://localhost:5001/api/restaurant/customers', config);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/customers`, config);
       // Sort by total spend descending
       const sorted = res.data.sort((a, b) => b.totalSpend - a.totalSpend);
       setCustomers(sorted);

@@ -13,7 +13,7 @@ const LiveOrders = () => {
     fetchOrders();
 
     // Setup Socket.io
-    socketRef.current = io('http://localhost:5001');
+    socketRef.current = io(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`);
     socketRef.current.emit('joinRestaurantRoom', restaurantData._id);
 
     socketRef.current.on('newOrder', (order) => {
@@ -43,7 +43,7 @@ const LiveOrders = () => {
   const fetchOrders = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      const res = await axios.get('http://localhost:5001/api/restaurant/orders', config);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/orders`, config);
       setOrders(res.data);
     } catch (error) {
       console.error('Failed to fetch orders');
@@ -53,7 +53,7 @@ const LiveOrders = () => {
   const updateStatus = async (id, status) => {
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      await axios.put(`http://localhost:5001/api/restaurant/orders/${id}/status`, { status }, config);
+      await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/orders/${id}/status`, { status }, config);
       // State is updated either via socket or fetch
       fetchOrders(); 
     } catch (error) {

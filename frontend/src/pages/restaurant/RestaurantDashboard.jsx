@@ -39,7 +39,7 @@ const RestaurantDashboard = () => {
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_PUBLIC_VAPID_KEY)
         });
-        await axios.post('http://localhost:5001/api/push/subscribe-restaurant', {
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/push/subscribe-restaurant`, {
           restaurantId: restaurantData._id,
           subscription
         });

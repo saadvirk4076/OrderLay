@@ -25,9 +25,9 @@ const MenuManager = () => {
   const fetchData = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      const catRes = await axios.get('http://localhost:5001/api/restaurant/categories', config);
+      const catRes = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/categories`, config);
       setCategories(catRes.data);
-      const menuRes = await axios.get('http://localhost:5001/api/restaurant/menu', config);
+      const menuRes = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/menu`, config);
       setMenuItems(menuRes.data);
     } catch (error) {
       console.error('Failed to fetch menu data');
@@ -38,7 +38,7 @@ const MenuManager = () => {
     e.preventDefault();
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      await axios.post('http://localhost:5001/api/restaurant/categories', { name: newCategoryName }, config);
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/categories`, { name: newCategoryName }, config);
       setNewCategoryName('');
       fetchData();
     } catch (err) {
@@ -50,7 +50,7 @@ const MenuManager = () => {
     if (!window.confirm('Delete category and ALL its items?')) return;
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      await axios.delete(`http://localhost:5001/api/restaurant/categories/${id}`, config);
+      await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/categories/${id}`, config);
       fetchData();
     } catch (err) {
       alert('Failed to delete category');
@@ -85,9 +85,9 @@ const MenuManager = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
       if (editingItem) {
-        await axios.put(`http://localhost:5001/api/restaurant/menu/${editingItem}`, formData, config);
+        await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/menu/${editingItem}`, formData, config);
       } else {
-        await axios.post('http://localhost:5001/api/restaurant/menu', formData, config);
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/menu`, formData, config);
       }
       setShowItemModal(false);
       fetchData();
@@ -99,7 +99,7 @@ const MenuManager = () => {
   const handleToggleStock = async (item) => {
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      await axios.put(`http://localhost:5001/api/restaurant/menu/${item._id}`, { isOutOfStock: !item.isOutOfStock }, config);
+      await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/menu/${item._id}`, { isOutOfStock: !item.isOutOfStock }, config);
       fetchData();
     } catch (err) {
       alert('Failed to update stock status');
@@ -116,7 +116,7 @@ const MenuManager = () => {
     setUploading(true);
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}`, 'Content-Type': 'multipart/form-data' } };
-      const res = await axios.post('http://localhost:5001/api/upload', imageFormData, config);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/upload`, imageFormData, config);
       setFormData(prev => ({ ...prev, photos: [...(prev.photos || []), ...res.data.urls] }));
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to upload images');
@@ -129,7 +129,7 @@ const MenuManager = () => {
     if (!window.confirm('Delete this item?')) return;
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      await axios.delete(`http://localhost:5001/api/restaurant/menu/${id}`, config);
+      await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/menu/${id}`, config);
       fetchData();
     } catch (err) {
       alert('Failed to delete item');

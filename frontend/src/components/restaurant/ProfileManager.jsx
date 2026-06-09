@@ -17,7 +17,7 @@ const ProfileManager = () => {
   const fetchProfile = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      const res = await axios.get('http://localhost:5001/api/restaurant/profile', config);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/profile`, config);
       setProfile(res.data);
       setLoading(false);
     } catch (error) {
@@ -48,7 +48,7 @@ const ProfileManager = () => {
     setUploading(true);
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}`, 'Content-Type': 'multipart/form-data' } };
-      const res = await axios.post('http://localhost:5001/api/upload', formData, config);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/upload`, formData, config);
       setProfile(prev => ({ ...prev, [field]: res.data.urls[0] }));
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to upload image');
@@ -68,7 +68,7 @@ const ProfileManager = () => {
     e.preventDefault();
     try {
       const config = { headers: { Authorization: `Bearer ${restaurantToken}` } };
-      await axios.put('http://localhost:5001/api/restaurant/profile', profile, config);
+      await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/restaurant/profile`, profile, config);
       alert('Profile updated successfully');
     } catch (error) {
       console.error(error);

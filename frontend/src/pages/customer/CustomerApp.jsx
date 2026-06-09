@@ -91,11 +91,11 @@ const CustomerApp = () => {
   // Handle live socket updates & verify order exists
   useEffect(() => {
     if (trackedOrder?._id) {
-      axios.get(`http://localhost:5001/api/public/order/${trackedOrder._id}`)
+      axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/public/order/${trackedOrder._id}`)
         .then(res => {
           setTrackedOrder(res.data);
           
-          socketRef.current = io('http://localhost:5001');
+          socketRef.current = io(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`);
           socketRef.current.emit('joinRestaurantRoom', trackedOrder._id);
           
           socketRef.current.on('orderStatusUpdated', (updatedOrder) => {
@@ -114,7 +114,7 @@ const CustomerApp = () => {
 
   const fetchRestaurantData = async () => {
     try {
-      const res = await axios.get(`http://localhost:5001/api/public/restaurant/${slug}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/public/restaurant/${slug}`);
       setData(res.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load restaurant data');
@@ -250,7 +250,7 @@ const CustomerApp = () => {
         items: activeCart,
         totalAmount: activeCart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
       };
-      const res = await axios.post('http://localhost:5001/api/public/order', payload);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/public/order`, payload);
       localStorage.setItem(`order_${slug}`, JSON.stringify(res.data));
       setTrackedOrder(res.data);
       setCart([]);
@@ -270,7 +270,7 @@ const CustomerApp = () => {
                   userVisibleOnly: true,
                   applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_PUBLIC_VAPID_KEY)
                 });
-                await axios.post(`http://localhost:5001/api/push/subscribe-order/${res.data._id}`, {
+                await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/push/subscribe-order/${res.data._id}`, {
                   subscription
                 });
                 alert('Order update notifications enabled!');
@@ -296,7 +296,7 @@ const CustomerApp = () => {
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_PUBLIC_VAPID_KEY)
         });
-        await axios.post(`http://localhost:5001/api/push/subscribe-order/${trackedOrder._id}`, {
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/push/subscribe-order/${trackedOrder._id}`, {
           subscription
         });
         alert('Order update notifications enabled! You will be notified when the restaurant changes your order status.');
