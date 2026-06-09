@@ -6,7 +6,7 @@ const Customer = require('../models/Customer');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET || "orderlay_super_secret_key", { expiresIn: '30d' });
 
 // @desc    Restaurant login
 // @route   POST /api/restaurant/login
