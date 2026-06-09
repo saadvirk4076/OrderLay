@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: orderlay-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: MONGO_URI
+        sync: false
+      - key: PUBLIC_VAPID_KEY
+        sync: false
+      - key: PRIVATE_VAPID_KEY
+        sync: false
