@@ -38,14 +38,14 @@ router.post('/', protectRestaurant, upload.array('images', 5), async (req, res) 
     const urls = [];
     
     for (const file of req.files) {
-      const filename = `img_${Date.now()}_${Math.round(Math.random() * 1E9)}.webp`;
-      const outputPath = path.join(uploadDir, filename);
-
+      // Aggressive compression since we store as base64 in MongoDB
+      // Target: ~20-40KB per image to keep DB lean
       const webpBuffer = await sharp(file.buffer)
-        .resize({ width: 800, height: 800, fit: 'cover', withoutEnlargement: true }) // Force square crop
-        .webp({ quality: 80 }) 
+        .resize({ width: 480, height: 480, fit: 'cover', withoutEnlargement: true })
+        .webp({ quality: 55, effort: 6 }) 
         .toBuffer();
       
+      console.log(`Compressed image: ${(file.size / 1024).toFixed(0)}KB → ${(webpBuffer.length / 1024).toFixed(0)}KB`);
       const base64Str = `data:image/webp;base64,${webpBuffer.toString('base64')}`;
       urls.push(base64Str);
     }
